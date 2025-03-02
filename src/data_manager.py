@@ -5,9 +5,9 @@ MAX_LESSONS = 9
 
 class DataManager:
     def __init__(self):
-        self.schedule_file = 'schedule.json'
-        self.homework_file = 'homework.json'
-        self.subjects_file = 'subjects.json'
+        self.schedule_file = '../data/schedule.json'
+        self.homework_file = '../data/homework.json'
+        self.subjects_file = '../data/subjects.json'
         
     def load_schedule(self):
         try:
