@@ -38,6 +38,69 @@ class SubjectsTab(QWidget):
         self.setLayout(layout)
         self.update_subject_list()
         
+        # Применение стилей
+        self.setStyleSheet("""
+            /* Стилизация QListWidget (список предметов) */
+            QListWidget {
+                font-size: 14px;
+                background-color: #fff;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                padding: 5px;
+            }
+            
+            QListWidget::item {
+                padding: 10px;
+                border-bottom: 1px solid #eee;
+            }
+            
+            QListWidget::item:hover {
+                background-color: #f0f0f0;
+            }
+            
+            QListWidget::item:selected {
+                background-color: #cce8ff;
+                color: #000;
+            }
+            
+            /* Стилизация QLineEdit (поле ввода) */
+            QLineEdit {
+                font-size: 14px;
+                padding: 8px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                background-color: #fff;
+            }
+            
+            QLineEdit:focus {
+                border-color: #66afe9;
+            }
+            
+            /* Стилизация QPushButton (кнопки) */
+            QPushButton {
+                font-size: 14px;
+                padding: 8px 16px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                background-color: #f0f0f0;
+                color: #333;
+            }
+            
+            QPushButton:hover {
+                background-color: #e0e0e0;
+            }
+            
+            QPushButton:pressed {
+                background-color: #d0d0d0;
+            }
+            
+            /* Стилизация QLabel (метка) */
+            QLabel {
+                font-size: 14px;
+                color: #333;
+            }
+        """)
+        
     def update_subject_list(self):
         self.subject_list.clear()
         self.subject_list.addItems(self.subjects)

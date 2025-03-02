@@ -5,9 +5,9 @@ MAX_LESSONS = 9
 
 class DataManager:
     def __init__(self):
-        self.schedule_file = '../data/schedule.json'
-        self.homework_file = '../data/homework.json'
-        self.subjects_file = '../data/subjects.json'
+        self.schedule_file = 'data/schedule.json'
+        self.homework_file = 'data/homework.json'
+        self.subjects_file = 'data/subjects.json'
         
     def load_schedule(self):
         try:
@@ -26,7 +26,7 @@ class DataManager:
         except (FileNotFoundError, json.JSONDecodeError):
             # Создаем новую структуру данных
             return {day: [{
-                "start_date": "1970-01-01",
+                "start_date": "2024-01-01",
                 "subjects": ['']*MAX_LESSONS
             }] for day in DAYS_OF_WEEK}
             

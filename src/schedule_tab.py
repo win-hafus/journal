@@ -41,19 +41,93 @@ class ScheduleTab(QWidget):
         
         # Настройка заголовков
         self.table.verticalHeader().setDefaultSectionSize(40)
-        self.table.horizontalHeader().setDefaultSectionSize(150)
+        self.table.horizontalHeader().setDefaultSectionSize(180)
         self.table.horizontalHeader().setMinimumSectionSize(100)
         self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         
         # Стилизация
-        self.table.setStyleSheet("""
+        self.setStyleSheet("""
+            /* Стилизация кнопок переключения недели */
+            QPushButton {
+                font-size: 12pt;
+                padding: 8px 16px;
+                margin-top: 5px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                background-color: #f0f0f0;
+                color: #333;
+            }
+            
+            QPushButton:hover {
+                background-color: #e0e0e0;
+            }
+            
+            QPushButton:pressed {
+                background-color: #d0d0d0;
+            }
+
+            QLabel {
+                font-size: 14pt;
+                font-weight: bold;
+                color: #333;
+                padding: 10px;
+                qproperty-alignment: AlignCenter;  /* Центрируем текст */
+            }
+            
+            /* Стилизация QTableWidget (таблица) */
+            QTableWidget {
+                font-size: 12pt;
+                background-color: #f9f9f9;
+                gridline-color: #ddd;
+            }
+            
             QHeaderView::section {
                 font-size: 12pt;
                 padding: 10px;
                 border: 1px solid #ddd;
+                background-color: #e0e0e0;
             }
-        """)
-        
+            
+            QTableWidget::item {
+                border: 1px solid #ddd;
+            }
+            
+            QTableWidget::item:selected {
+                background-color: #cce8ff;
+                color: #000;
+            }
+            
+            QComboBox {
+                font-size: 12pt;
+                padding: 5px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                background-color: #fff;
+            }
+            
+            QComboBox::drop-down {
+                subcontrol-origin: padding;
+                subcontrol-position: top right;
+                width: 20px;
+                border-left-width: 1px;
+                border-left-color: #ccc;
+                border-left-style: solid;
+                border-top-right-radius: 4px;
+                border-bottom-right-radius: 4px;
+            }
+            
+            QComboBox::down-arrow {
+                image: url(down_arrow.png);  /* Замените на путь к вашему изображению */
+            }
+            
+            QComboBox QAbstractItemView {
+                font-size: 12pt;
+                padding: 10px;
+                border: 1px solid #ccc;
+                background-color: #fff;
+                selection-background-color: #cce8ff;
+            }
+        """)        
         layout.addLayout(nav_layout)
         layout.addWidget(self.table, 1)
         

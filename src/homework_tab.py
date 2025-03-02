@@ -21,7 +21,7 @@ class HomeworkTab(QWidget):
         self.prev_day_btn.clicked.connect(self.prev_day)
         self.next_day_btn = QPushButton('Следующий →')
         self.next_day_btn.clicked.connect(self.next_day)
-        self.date_label = QLabel(self.current_date.toString("dd.MM.yyyy"))
+        self.date_label = QLabel(self.current_date.toString())
         
         nav_layout.addWidget(self.prev_day_btn)
         nav_layout.addWidget(self.date_label)
@@ -41,7 +41,6 @@ class HomeworkTab(QWidget):
         left_panel.addWidget(self.schedule_table)
         
         self.homework_edit = QTextEdit()
-        self.homework_edit.setStyleSheet("font-size: 12pt;")
         self.homework_edit.setPlaceholderText("Выберите предмет для добавления домашнего задания")
         self.homework_edit.textChanged.connect(self.save_homework)
         
@@ -51,22 +50,95 @@ class HomeworkTab(QWidget):
         self.setLayout(main_layout)
         self.update_schedule()
         
+        # Применение стилей
+        self.setStyleSheet("""
+            /* Стилизация QTableWidget (таблица предметов) */
+            QTableWidget {
+                font-size: 14px;
+                background-color: #fff;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                gridline-color: #ddd;
+            }
+            
+            QTableWidget::item {
+                padding: 10px;
+                border-bottom: 1px solid #eee;
+            }
+            
+            QTableWidget::item:selected {
+                background-color: #cce8ff;
+                color: #000;
+            }
+            
+            QHeaderView::section {
+                font-size: 14px;
+                padding: 10px;
+                background-color: #e0e0e0;
+                border: 1px solid #ccc;
+            }
+            
+            /* Стилизация QPushButton (кнопки) */
+            QPushButton {
+                font-size: 14px;
+                padding: 8px 16px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                background-color: #f0f0f0;
+                color: #333;
+            }
+            
+            QPushButton:hover {
+                background-color: #e0e0e0;
+            }
+            
+            QPushButton:pressed {
+                background-color: #d0d0d0;
+            }
+            
+            /* Стилизация QTextEdit (поле для домашнего задания) */
+            QTextEdit {
+                font-size: 14px;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                background-color: #fff;
+            }
+            
+            QTextEdit:focus {
+                border-color: #66afe9;
+            }
+            
+            /* Стилизация QLabel (метка даты) */
+            QLabel {
+                font-size: 14px;
+                color: #333;
+                padding: 5px;
+            }
+        """)
+        
     def update_schedule(self):
         self.schedule_table.blockSignals(True)
+    
+        # Получаем индекс дня недели (0-6)
+        day_of_week_index = self.current_date.dayOfWeek() - 1
+    
+        # Проверяем, что индекс в пределах списка DAYS_OF_WEEK
+        if day_of_week_index < len(DAYS_OF_WEEK):
+            day_of_week = DAYS_OF_WEEK[day_of_week_index]
+            schedule = self.get_schedule_for_date(self.current_date)
+            subjects = schedule.get(day_of_week, [''] * MAX_LESSONS)
         
-        schedule = self.get_schedule_for_date(self.current_date)
-        day_of_week = DAYS_OF_WEEK[self.current_date.dayOfWeek()-1]
-        subjects = schedule.get(day_of_week, [''] * MAX_LESSONS)
-        
-        self.schedule_table.setRowCount(MAX_LESSONS)
-        for row in range(MAX_LESSONS):
-            item = QTableWidgetItem(subjects[row] if row < len(subjects) else '')
-            item.setTextAlignment(Qt.AlignCenter)
-            self.schedule_table.setItem(row, 0, item)
-        
+            # Заполняем таблицу
+            self.schedule_table.setRowCount(MAX_LESSONS)
+            for row in range(MAX_LESSONS):
+                item = QTableWidgetItem(subjects[row] if row < len(subjects) else '')
+                item.setTextAlignment(Qt.AlignCenter)
+                self.schedule_table.setItem(row, 0, item)
+    
         self.schedule_table.blockSignals(False)
         self.date_label.setText(self.current_date.toString("dd.MM.yyyy"))
-        
+            
     def get_schedule_for_date(self, target_date):
         target_date_str = target_date.toString("yyyy-MM-dd")
         schedule = {}
