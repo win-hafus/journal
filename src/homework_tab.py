@@ -2,6 +2,10 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt, QDate
 from src.data_manager import DAYS_OF_WEEK, MAX_LESSONS
 
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import Qt, QDate
+from src.data_manager import DAYS_OF_WEEK, MAX_LESSONS
+
 class HomeworkTab(QWidget):
     def __init__(self, data_manager):
         super().__init__()
@@ -16,17 +20,24 @@ class HomeworkTab(QWidget):
         
         left_panel = QVBoxLayout()
         
+        # Панель навигации
         nav_layout = QHBoxLayout()
         self.prev_day_btn = QPushButton('← Предыдущий')
         self.prev_day_btn.clicked.connect(self.prev_day)
         self.next_day_btn = QPushButton('Следующий →')
         self.next_day_btn.clicked.connect(self.next_day)
-        self.date_label = QLabel(self.current_date.toString())
+        self.date_label = QLabel(self.current_date.toString("dd.MM.yyyy"))
         
         nav_layout.addWidget(self.prev_day_btn)
         nav_layout.addWidget(self.date_label)
         nav_layout.addWidget(self.next_day_btn)
         
+        # Метка для отображения дня недели
+        self.day_of_week_label = QLabel()
+        self.day_of_week_label.setAlignment(Qt.AlignCenter)  # Центрируем текст
+        self.day_of_week_label.setStyleSheet("font-size: 14pt; font-weight: bold;")
+        
+        # Таблица с расписанием
         self.schedule_table = QTableWidget(MAX_LESSONS, 1)
         self.schedule_table.setHorizontalHeaderLabels(["Предметы"])
         self.schedule_table.verticalHeader().setVisible(False)
@@ -38,8 +49,10 @@ class HomeworkTab(QWidget):
         self.schedule_table.verticalHeader().setDefaultSectionSize(40)
         
         left_panel.addLayout(nav_layout)
+        left_panel.addWidget(self.day_of_week_label)  # Добавляем метку дня недели
         left_panel.addWidget(self.schedule_table)
         
+        # Поле для ввода домашнего задания
         self.homework_edit = QTextEdit()
         self.homework_edit.setPlaceholderText("Выберите предмет для добавления домашнего задания")
         self.homework_edit.textChanged.connect(self.save_homework)
@@ -109,7 +122,7 @@ class HomeworkTab(QWidget):
                 border-color: #66afe9;
             }
             
-            /* Стилизация QLabel (метка даты) */
+            /* Стилизация QLabel (метка даты и дня недели) */
             QLabel {
                 font-size: 14px;
                 color: #333;
@@ -128,6 +141,9 @@ class HomeworkTab(QWidget):
             day_of_week = DAYS_OF_WEEK[day_of_week_index]
             schedule = self.get_schedule_for_date(self.current_date)
             subjects = schedule.get(day_of_week, [''] * MAX_LESSONS)
+        
+            # Обновляем метку дня недели
+            self.day_of_week_label.setText(day_of_week)
         
             # Заполняем таблицу
             self.schedule_table.setRowCount(MAX_LESSONS)

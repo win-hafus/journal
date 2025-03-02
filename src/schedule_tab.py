@@ -32,7 +32,7 @@ class ScheduleTab(QWidget):
         nav_layout.addWidget(self.next_week_btn)
         
         # Настройка таблицы
-        self.table = QTableWidget(MAX_LESSONS, len(DAYS_OF_WEEK))
+        self.table = QTableWidget(MAX_LESSONS, len(DAYS_OF_WEEK)-1)
         self.table.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         
         # Настройка шрифтов
