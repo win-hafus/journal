@@ -1,8 +1,9 @@
 from PyQt5.QtWidgets import QMainWindow, QTabWidget
-from src.schedule_tab import ScheduleTab
-from src.homework_tab import HomeworkTab
-from src.subjects_tab import SubjectsTab
-from src.data_manager import DataManager
+from .data_manager import DataManager
+from .homework_tab import HomeworkTab
+from .schedule_tab import ScheduleTab
+from .subjects_tab import SubjectsTab
+from .grades_tab import GradesTab
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -11,29 +12,39 @@ class MainWindow(QMainWindow):
         self.setGeometry(100, 100, 800, 600)
         
         self.data_manager = DataManager()
-        
         self.tabs = QTabWidget()
+        
+        self._init_tabs()
+        self._connect_signals()
+        self._apply_styles()
+        self.setCentralWidget(self.tabs)
+
+    def _init_tabs(self):
         self.tabs.addTab(ScheduleTab(self.data_manager), 'Расписание')
         self.tabs.addTab(HomeworkTab(self.data_manager), 'Домашние задания')
         self.tabs.addTab(SubjectsTab(self.data_manager), 'Предметы')
-        
-        self.setCentralWidget(self.tabs)
+        self.tabs.addTab(GradesTab(self.data_manager), 'Оценки')
 
+    def _connect_signals(self):
+        self.data_manager.subjects_updated.connect(self.tabs.widget(0).refresh_data)
+        self.data_manager.schedule_updated.connect(self.tabs.widget(0).refresh_data)
+        self.data_manager.homework_updated.connect(self.tabs.widget(1).refresh_data)
+        self.data_manager.subjects_updated.connect(self.tabs.widget(2).refresh_data)
+        self.data_manager.grades_updated.connect(self.tabs.widget(3).refresh_data)
+
+    def _apply_styles(self):
         self.setStyleSheet("""
-            /* Стилизация главного окна */
             QMainWindow {
                 background-color: #f5f5f5;
             }
             
-            /* Стилизация QTabWidget */
             QTabWidget::pane {
                 border: 1px solid #ccc;
                 background-color: #fff;
                 margin: 0px;
-                padding: 0px;
+                padding: 5px 0;
             }
             
-            /* Стилизация вкладок */
             QTabBar::tab {
                 background-color: #e0e0e0;
                 border: 1px solid #ccc;
@@ -46,25 +57,21 @@ class MainWindow(QMainWindow):
                 border-top-right-radius: 5px;
             }
             
-            /* Стилизация активной вкладки */
             QTabBar::tab:selected {
                 background-color: #fff;
                 border-bottom-color: #fff;
                 color: #000;
             }
             
-            /* Стилизация при наведении на вкладку */
             QTabBar::tab:hover {
                 background-color: #d0d0d0;
             }
             
-            /* Стилизация кнопок закрытия вкладок (если они есть) */
             QTabBar::close-button {
                 subcontrol-position: right;
                 padding: 2px;
             }
             
-            /* Стилизация области содержимого вкладок */
             QTabWidget::tab-bar {
                 alignment: center;
             }
